@@ -1,4 +1,5 @@
 import csv
+import pandas as pd
 
 
 class Song:
@@ -74,27 +75,72 @@ class MusicLibrary:
         else:
             print("Title not found")
 
+
 #
 #
 class Playlist:
-    def __init__(self):
-        self.playlist = []
 
     @staticmethod
-    def add_song(title):
+    def create_playlist(playlist):
 
         with open("DataSample.csv", "r") as file:
-            read = csv.reader(file)
-            rows = [row for row in read]
+            reader = pd.read_csv(file)
 
-        with open("DataSample.csv", "w") as file:
-            type(file)
-            writer = csv.writer(file)
-            writer.writeheader()
-            writer.writerow(title)
-#
-#     def remove_song(self, song):
-#
-#     def reorder_songs(self, new_order):
-#
-#     def display_playlist(self):
+        if playlist not in reader:
+            reader[playlist] = ""
+            reader.to_csv("DataSample.csv", index=False)
+            print("Playlist created")
+        else:
+            print("Playlist is existing")
+
+    @staticmethod
+    def add_song(title, playlist):
+        with (open("DataSample.csv", "r") as file):
+            df = pd.read_csv(file)
+
+            if title not in df["Title"].values or playlist not in df.columns:
+                print("Music or playlist not found")
+
+            elif title in df[playlist].values:
+                print("Music is already in the playlist")
+
+            elif title in df["Title"].values and playlist in df.columns:
+                first_empty_cell = df[playlist].isnull().idxmax()
+                df.loc[first_empty_cell, [playlist]] = [title]
+                df.to_csv("DataSample.csv", index=False)
+                print(title, "added to", playlist)
+
+    @staticmethod
+    def remove_song(title, playlist):
+        with open("DataSample.csv", "r") as file:
+            df = pd.read_csv(file)
+
+        if title not in df["Title"].values or playlist not in df.columns:
+            print("Music or playlist not found")
+
+        elif title in df["Title"].values and playlist in df.columns:
+            df.drop(df[df[playlist] == title].index, inplace=True)
+            df.to_csv("DataSample.csv", index=False)
+            print(title, "removed from", playlist)
+
+    @staticmethod
+    def Shuffle(playlist):
+        with open("DataSample.csv", "r") as file:
+            df = pd.read_csv(file)
+
+            if playlist not in df.columns:
+                print("Playlist not found")
+            elif playlist in df.columns:
+                df = df[playlist]
+                df.to_csv("DataSample.csv", index=False)
+                print("Playlist shuffled")
+
+    @staticmethod
+    def display_playlist(playlist):
+        with open("DataSample.csv", "r") as file:
+            df = pd.read_csv(file)
+        if playlist in df.columns:
+            print("Your playlist: \n", df[playlist])
+        else:
+            print("Playlist not found")
+
