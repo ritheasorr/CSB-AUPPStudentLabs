@@ -1,7 +1,7 @@
 #This unittest file tests the core functionality of the MFun class. You can expand it by adding more test methods for other methods in the class.
 
 import unittest
-from musicstreamingapp import Song, MusicLibrary, PlayList
+from musicstreamingapp import MusicLibrary, PlayList
 
 class TestMFunMethods(unittest.TestCase):
     def setUp(self):
